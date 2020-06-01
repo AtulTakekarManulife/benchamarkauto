@@ -1,0 +1,27 @@
+---
+groups:
+- name: NORTH-AMERICA-VALIDATION
+  jobs:
+  - ping-ilb
+
+
+resources:
+- name: src-master
+  type: git
+  source:
+    branch: master
+    uri: {{git_url}} 
+    private_key: {{git_ssh_key}}
+
+
+jobs:
+- name: ping-ilb
+  serial: true
+  public: true
+  plan:
+  - aggregate:
+    - get: benchmarkauto
+      resource: src-master
+      trigger: false
+  - task: assemble
+    file: benchamarkauto/concourse/tasks/assemble.yml
